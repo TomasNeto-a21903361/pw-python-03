@@ -12,8 +12,9 @@ def pede_nome():
             return nome
 
 def gera_nome(nome):
-    final = nome[:-4] + ".json"
-    return final
+    final = nome.split(".")
+    res = final[0] + ".json"
+    return res
 
 
 
