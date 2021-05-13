@@ -2,7 +2,7 @@ import collections
 import os
 import glob
 import csv
-
+from matplotlib import pyplot as plt
 
 def pede_pasta():
     while True:
@@ -44,9 +44,21 @@ def guarda_resultados(res):
             writer.writerow([key, value])
 
 
+def faz_grafico_queijos(titulo, lista_chaves, lista_valores):
+    plt.pie(lista_valores, labels=lista_chaves, autopct='%1.0f%%')
+    plt.title(titulo)
+    plt.show()
+
+
+def faz_grafico_barras(titulo, lista_chaves, lista_valores):
+    plt.bar(lista_chaves, lista_valores)
+    plt.title(titulo)
+    plt.show()
+
 
 if __name__ == '__main__':
     # print(pede_pasta())
     #print(faz_calculos(pede_pasta()))
     x = faz_calculos(pede_pasta())
     guarda_resultados(x)
+
