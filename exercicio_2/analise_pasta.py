@@ -13,7 +13,7 @@ def pede_pasta():
         if os.path.exists(path):
             return path
 
-
+'''
 def faz_calculos(dir):
     #res = {}
     #listaFicheiros = os.listdir(dir)
@@ -35,13 +35,35 @@ def faz_calculos(dir):
 
 # res = {str(volume.keys()) + "volume: " + str(dict(volume)) + " quantidade: " + str(dict(count)) + "}"}
     return res
+'''
 
+def faz_calculos(foldername):
+    res = {}
+    dirs = os.listdir(foldername)
+
+    for file in dirs:
+        path = f"teste\\{file}"
+        if os.path.isfile(path):
+            size = os.path.getsize(path)
+            ext = file.split(".")[-1]
+            if not ext in res:
+                res[ext] = {}
+                res[ext]['quantidade'] = 1
+                res[ext]['size'] = size
+            else:
+                res[ext]['quantidade'] = res[ext]['quantidade'] + 1
+                res[ext]['size'] = res[ext]['size'] + size
+
+    return res
+
+'''
 def aux(res):
     xd = {key: [re.sub('quantidade:', '', ele) for ele in val]
     for key, val in res.items()}
     kek = {key: [re.sub('volume:', '', ele) for ele in val]
     for key, val in xd.items()}
     return kek
+'''
 
 
 def guarda_resultados(res):
@@ -49,29 +71,45 @@ def guarda_resultados(res):
     final = nome.split(".")
     name = final[0] + ".csv"
     print(name)
-    with open(name, 'w', newline="") as csv_file:
-        writer = csv.writer(csv_file)
-        writer.writerow(["Extensao", "Quantidade", "Tamanho[kByte]"])
-        for key, value in aux(res).items():
-            writer.writerow([key,value])
+    with open(name, "w", newline='') as output_file:
+        writer = csv.writer(output_file)
+        writer.writerow(["Extensao", "Quantidade", "Tamanho\[kByte]"])
+        for key in res:
+            writer.writerow([key, res[key]['quantidade'], res[key]['size']])
 
 
 
-def faz_grafico_queijos(titulo, lista_chaves, lista_valores):
-    plt.pie(lista_valores, labels=lista_chaves, autopct='%1.0f%%')
-    plt.title(titulo)
+def faz_grafico_queijos(dict_info):
+    lista_chaves = [key for key in dict_info.keys()]
+    lista_valores_Quantidades = [dict_info[key]['quantidade'] for key in dict_info.keys()]
+    plt.pie(lista_valores_Quantidades, labels=lista_chaves, autopct='%1.0f%%')
+    plt.title("Quantidades")
+    plt.show()
+
+    lista_valores_Tamanhos = [dict_info[key]['size'] for key in dict_info.keys()]
+    plt.pie(lista_valores_Tamanhos, labels=lista_chaves, autopct='%1.0f%%')
+    plt.title("Tamanhos")
     plt.show()
 
 
-def faz_grafico_barras(titulo, lista_chaves, lista_valores):
-    plt.bar(lista_chaves, lista_valores)
-    plt.title(titulo)
+def faz_grafico_barras(dict_info):
+    lista_chaves = [key for key in dict_info.keys()]
+    lista_valores_Quantidades = [dict_info[key]['quantidade'] for key in dict_info.keys()]
+    plt.bar(lista_chaves, lista_valores_Quantidades)
+    plt.title("Quantidades")
+    plt.show()
+
+    lista_valores_Tamanhos = [dict_info[key]['size'] for key in dict_info.keys()]
+    plt.bar(lista_chaves, lista_valores_Tamanhos)
+    plt.title("Tamanhos")
     plt.show()
 
 
 if __name__ == '__main__':
     # print(pede_pasta())
     #print(faz_calculos(pede_pasta()))
-    x = faz_calculos(pede_pasta())
+    y = pede_pasta()
+    x = faz_calculos(y)
     #print(aux(x))
     guarda_resultados(x)
+    faz_grafico_barras(faz_calculos(y))
